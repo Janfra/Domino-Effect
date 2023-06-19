@@ -45,6 +45,19 @@ public class DominoMovement : MonoBehaviour
         TryMoveDomino();
     }
 
+    /// <summary>
+    /// Updates the domino being moved
+    /// </summary>
+    /// <param name="dominoRigidbody"></param>
+    public void SetControlledDomino(Rigidbody dominoRigidbody)
+    {
+        this.dominoRigidbody = dominoRigidbody;
+        this.dominoTransform = dominoRigidbody.transform;
+    }
+
+    /// <summary>
+    /// Updates the movement to match inputs
+    /// </summary>
     private void UpdateInput()
     {
         float xDirection = Input.GetAxisRaw("Horizontal");
@@ -62,6 +75,9 @@ public class DominoMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Attempts to move the domino to the given input
+    /// </summary>
     private void TryMoveDomino()
     {
         if (isMoving)
@@ -80,6 +96,9 @@ public class DominoMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Rotate the domino to face the movement direction at rotation speed
+    /// </summary>
     private void RotateToMovementDirection()
     {
         if (isMoving)
@@ -88,11 +107,19 @@ public class DominoMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Get a quaternion with the forward direction to rotate to
+    /// </summary>
+    /// <returns></returns>
     private Quaternion GetFacingDirection()
     {
         return Quaternion.LookRotation(GetMovementDirection().normalized);
     }
 
+    /// <summary>
+    /// Get the movement direction based on the domino rotation
+    /// </summary>
+    /// <returns></returns>
     private Vector3 GetMovementDirection()
     {
         Vector3 dominoPosition = dominoTransform.position;
