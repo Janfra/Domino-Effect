@@ -8,18 +8,38 @@ public class DominoMovement : MonoBehaviour
     [Header("Dependencies")]
     [SerializeField]
     private Rigidbody dominoRigidbody;
+    [SerializeField]
     private Transform dominoTransform;
+    [SerializeField]
+    private Transform dominoBodyTransform;
 
     [Header("Config")]
     [SerializeField]
-    public bool isInputEnable;
+    public bool isInputEnable = true;
     [SerializeField]
-    private float speed;
+    private float speed = 100;
     [SerializeField]
-    private float rotationSpeed;
+    private float rotationSpeed = 100;
+    [SerializeField]
+    private float dominoRotationMultiplier = 1.6f;
+
+    #region Movement
 
     private Vector3 movementDirection;
+    private float lastNonZeroMovementDirection = 1;
     private bool isMoving;
+
+    #endregion
+
+    #region Domino Body Rotation
+
+    private bool isRotating;
+    private Vector3 rotationEuler;
+    private float xRotationTarget;
+    private float xRotationStart;
+    private float timer;
+
+    #endregion
 
     private void Start()
     {
@@ -31,12 +51,15 @@ public class DominoMovement : MonoBehaviour
         {
             SetControlledDomino(dominoRigidbody);
         }
+        xRotationStart = 0;
+        xRotationTarget = 90;
     }
 
     private void Update()
     {
         UpdateInput();
-        RotateToMovementDirection();
+        RotateDominoBody();
+        RotateToFaceMovementDirection();
         transform.LookAt(dominoTransform);
     }
 
@@ -63,16 +86,28 @@ public class DominoMovement : MonoBehaviour
     {
         float xDirection = Input.GetAxisRaw("Horizontal");
         float zDirection = Input.GetAxisRaw("Vertical");
-        
-        if(zDirection != 0 && isInputEnable)
+
+        if (isInputEnable)
         {
-            movementDirection = new(xDirection, 0, zDirection);
-            isMoving = true;
-        }
-        else
-        {
-            movementDirection = new();
-            isMoving = false;
+            if(zDirection != 0)
+            {
+                if (!isRotating)
+                {
+                    lastNonZeroMovementDirection = zDirection;
+                }
+                movementDirection = new(xDirection, 0, zDirection);
+                isMoving = true;
+            }
+            else if (xDirection != 0 && isRotating)
+            {
+                movementDirection = new(xDirection, 0, lastNonZeroMovementDirection);
+                isMoving = false;
+            }
+            else
+            {
+                movementDirection = new();
+                isMoving = false;
+            }
         }
     }
 
@@ -81,10 +116,10 @@ public class DominoMovement : MonoBehaviour
     /// </summary>
     private void TryMoveDomino()
     {
-        if (isMoving)
+        if (isRotating)
         {
             Vector3 velocity = new();
-            if(movementDirection.z > 0)
+            if(lastNonZeroMovementDirection > 0)
             {
                 velocity = dominoTransform.forward.normalized * Time.fixedDeltaTime * speed;
             }
@@ -100,9 +135,9 @@ public class DominoMovement : MonoBehaviour
     /// <summary>
     /// Rotate the domino to face the movement direction at rotation speed
     /// </summary>
-    private void RotateToMovementDirection()
+    private void RotateToFaceMovementDirection()
     {
-        if (isMoving)
+        if (isRotating)
         {
             dominoTransform.rotation = Quaternion.RotateTowards(dominoTransform.rotation, GetFacingDirection(), rotationSpeed * Time.deltaTime);
         }
@@ -135,8 +170,33 @@ public class DominoMovement : MonoBehaviour
         return vectorPointingToDirection;
     }
 
+    /// <summary>
+    /// Rotates the domino body for movement and matching forward rotation
+    /// </summary>
+    private void RotateDominoBody()
+    {
+        if (isMoving || isRotating)
+        {
+            timer += Time.deltaTime * dominoRotationMultiplier;
+            timer = Mathf.Clamp01(timer);
+            rotationEuler.x = Mathf.Lerp(xRotationStart, xRotationTarget, timer);
+            isRotating = true;
+            if(timer == 1)
+            {
+                isRotating = false;
+                xRotationStart = xRotationTarget;
+                xRotationTarget += 90 * lastNonZeroMovementDirection;
+                timer = 0.0f;
+            }
+        }
 
-    // Getters and Setters
+        rotationEuler.y = dominoTransform.rotation.eulerAngles.y;
+        rotationEuler.z = dominoTransform.rotation.eulerAngles.z;
+        Quaternion rotationToSet = Quaternion.Euler(rotationEuler);
+        dominoBodyTransform.rotation = rotationToSet;
+    }
+
+    #region Getters & Setters
 
     public Rigidbody GetPlayerRigidbody()
     {
@@ -147,4 +207,6 @@ public class DominoMovement : MonoBehaviour
     {
         return dominoTransform;
     }
+
+    #endregion
 }

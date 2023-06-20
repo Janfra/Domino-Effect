@@ -20,7 +20,6 @@ public class RespawnPoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Trigger enter");
         if(other.CompareTag("Player"))
         {
             Debug.Log("New respawn point");
