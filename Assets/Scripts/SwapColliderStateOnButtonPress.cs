@@ -3,34 +3,22 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using UnityEngine;
 
-[RequireComponent(typeof(PressingButton))]
-public class SwapColliderStateOnButtonPress : MonoBehaviour
+public class SwapColliderStateOnButtonPress : OnPressedEvent
 {
     [Header("Dependencies")]
     [SerializeField]
-    private PressingButton caller;
-    [SerializeField]
     private List<Collider> collidersToSwapState;
-
-    private void Awake()
-    {
-        if(caller == null)
-        {
-            Debug.LogWarning($"No caller set for {gameObject.name} in the disable collider");
-            caller = GetComponent<PressingButton>();
-        }
-    }
 
     private void Start()
     {
-        caller.OnPressed += SwapCurrentState;
-        caller.OnReleased += SwapCurrentState;
+        buttonCaller.OnPressed += SwapCurrentState;
+        buttonCaller.OnReleased += SwapCurrentState;
     }
 
     private void OnDisable()
     {
-        caller.OnPressed -= SwapCurrentState;
-        caller.OnReleased -= SwapCurrentState;
+        buttonCaller.OnPressed -= SwapCurrentState;
+        buttonCaller.OnReleased -= SwapCurrentState;
     }
 
     private void SwapCurrentState() 
