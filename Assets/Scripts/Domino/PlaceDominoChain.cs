@@ -6,9 +6,10 @@ using UnityEngine;
 public class PlaceDominoChain : MonoBehaviour
 {
     private bool IsUIEnabled = false;
-    [SerializeField]private int numberOfDomino = 1;
+    private int numberOfDomino = 1;
     private GameObject DominoChain;
-    [SerializeField] private float spaceBetweenDomino;
+    [SerializeField] private int dominoSupply;
+    [SerializeField] public float spaceBetweenDomino;
     [SerializeField] private GameObject dominoToPlace;
 
     private void Update()
@@ -42,13 +43,15 @@ public class PlaceDominoChain : MonoBehaviour
                 material.color = color;
             }
         }
+        DominoChain.AddComponent<DominoChain>().percentGiveBetweenDomino = 5.0f;
+        SubtractDominoFromSupply(DominoChain.transform.childCount);
         DominoChain = null;
     }
 
     private void ChangeDominoLength()
     {
         numberOfDomino += Mathf.RoundToInt(Input.mouseScrollDelta.y);
-        numberOfDomino = Mathf.Clamp(numberOfDomino, 0, 100);
+        numberOfDomino = Mathf.Clamp(numberOfDomino, 0, dominoSupply);
 
         if (DominoChain.transform.childCount < numberOfDomino)
         {
@@ -101,5 +104,16 @@ public class PlaceDominoChain : MonoBehaviour
             color.a = 0.5f;
             material.color = color;
         }
+    }
+
+    public void AddDominoToSupply(int domino)
+    {
+        dominoSupply += domino;
+    }
+
+    public void SubtractDominoFromSupply(int domino)
+    {
+        dominoSupply -= domino;
+        if (dominoSupply < 0) dominoSupply = 0;
     }
 }

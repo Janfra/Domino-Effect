@@ -486,6 +486,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: domino
       objectReference: {fileID: 0}
+    - target: {fileID: 8995610282496865691, guid: 0303ec24313fef041b63480467cad4e6, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0303ec24313fef041b63480467cad4e6, type: 3}
 --- !u!54 &1252980152073159240 stripped
