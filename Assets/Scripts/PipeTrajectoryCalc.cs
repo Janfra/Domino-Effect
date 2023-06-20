@@ -19,10 +19,6 @@ public class PipeTrajectoryCalc : MonoBehaviour
         float lerpScale = lerpCurrentTime / lerpTotalTime;
         if (objectBeingProj != null && lerpScale < 1.0f)
         {
-            if (lerpScale <= 0.001f)
-            {
-                nodes[0].position = objectBeingProj.position;
-            }
             Vector3 lerp1 = Vector3.Lerp(nodes[0].position, nodes[1].position, lerpScale);
             Vector3 lerp2 = Vector3.Lerp(nodes[1].position, nodes[2].position, lerpScale);
 
@@ -33,8 +29,7 @@ public class PipeTrajectoryCalc : MonoBehaviour
         else if (objectBeingProj != null && lerpScale >= 1.0f)
         {
             lerpCurrentTime = 0.0f;
-            Camera.main.GetComponent<DominoMovement>().isInputEnable = true;
-            objectBeingProj.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            objectBeingProj.gameObject.GetComponent<TempMovement>().enabled = true;
             objectBeingProj = null;
         }
     }
