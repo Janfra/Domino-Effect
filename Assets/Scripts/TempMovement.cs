@@ -13,6 +13,6 @@ public class TempMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position += (Vector3.forward * Input.GetAxis("Vertical") + Vector3.right * Input.GetAxis("Horizontal")) * Time.deltaTime * 10.0f;
+        
     }
 }
