@@ -29,7 +29,7 @@ public class DominoMovement : MonoBehaviour
         }
         else
         {
-            dominoTransform = dominoRigidbody.transform;
+            SetControlledDomino(dominoRigidbody);
         }
     }
 
@@ -53,6 +53,7 @@ public class DominoMovement : MonoBehaviour
     {
         this.dominoRigidbody = dominoRigidbody;
         this.dominoTransform = dominoRigidbody.transform;
+        this.dominoTransform.gameObject.tag = "Player";
     }
 
     /// <summary>
@@ -132,5 +133,18 @@ public class DominoMovement : MonoBehaviour
         vectorPointingToDirection = dominoTransform.rotation * vectorPointingToDirection;
 
         return vectorPointingToDirection;
+    }
+
+
+    // Getters and Setters
+
+    public Rigidbody GetPlayerRigidbody()
+    {
+        return dominoRigidbody;
+    }
+
+    public Transform GetPlayerTransform()
+    {
+        return dominoTransform;
     }
 }
