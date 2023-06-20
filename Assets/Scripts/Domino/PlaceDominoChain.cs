@@ -31,21 +31,24 @@ public class PlaceDominoChain : MonoBehaviour
 
     private void PlaceDomino()
     {
-        for (int i = 0; i < DominoChain.transform.childCount; i++)
+        if (DominoChain.transform.childCount > 0)
         {
-            Transform domino = DominoChain.transform.GetChild(i);
-            domino.GetComponent<Rigidbody>().isKinematic = false;
-            domino.GetComponent<BoxCollider>().isTrigger = false;
-            foreach (Material material in domino.GetComponent<Renderer>().materials)
+            for (int i = 0; i < DominoChain.transform.childCount; i++)
             {
-                Color color = material.color;
-                color.a = 1.0f;
-                material.color = color;
+                Transform domino = DominoChain.transform.GetChild(i);
+                domino.GetComponent<Rigidbody>().isKinematic = false;
+                domino.GetComponent<BoxCollider>().isTrigger = false;
+                foreach (Material material in domino.GetComponent<Renderer>().materials)
+                {
+                    Color color = material.color;
+                    color.a = 1.0f;
+                    material.color = color;
+                }
             }
+            DominoChain.AddComponent<DominoChain>().percentGiveBetweenDomino = 5.0f;
+            SubtractDominoFromSupply(DominoChain.transform.childCount);
+            DominoChain = null;
         }
-        DominoChain.AddComponent<DominoChain>().percentGiveBetweenDomino = 5.0f;
-        SubtractDominoFromSupply(DominoChain.transform.childCount);
-        DominoChain = null;
     }
 
     private void ChangeDominoLength()
@@ -53,7 +56,11 @@ public class PlaceDominoChain : MonoBehaviour
         numberOfDomino += Mathf.RoundToInt(Input.mouseScrollDelta.y);
         numberOfDomino = Mathf.Clamp(numberOfDomino, 0, dominoSupply);
 
-        if (DominoChain.transform.childCount < numberOfDomino)
+        Transform playerTransform = Camera.main.GetComponent<DominoMovement>().GetPlayerTransform();
+
+        if (DominoChain.transform.childCount < numberOfDomino && 
+            !Physics.Raycast(playerTransform.position, playerTransform.forward, (DominoChain.transform.childCount + 1) * spaceBetweenDomino,
+            Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
         {
             InstatiateUIDomino();
         }
