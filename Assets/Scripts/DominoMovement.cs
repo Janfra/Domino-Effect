@@ -12,7 +12,7 @@ public class DominoMovement : MonoBehaviour
 
     [Header("Config")]
     [SerializeField]
-    private bool isInputEnable;
+    public bool isInputEnable;
     [SerializeField]
     private float speed;
     [SerializeField]
