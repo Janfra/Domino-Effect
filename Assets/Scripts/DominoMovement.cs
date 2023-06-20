@@ -133,20 +133,4 @@ public class DominoMovement : MonoBehaviour
 
         return vectorPointingToDirection;
     }
-
-    private void OnDrawGizmos()
-    {
-        if (movementDirection != null && dominoTransform != null)
-        {
-            Vector3 dominoPosition = dominoTransform.position;
-
-            // Get direction of the movement based on position
-            Vector3 directionToMovement = (movementDirection.normalized + dominoPosition) - dominoPosition;
-
-            // Change it from global direction to match the object rotation
-            directionToMovement = dominoTransform.rotation * directionToMovement;
-
-            Gizmos.DrawLine(dominoTransform.position, directionToMovement.normalized * 10);
-        }
-    }
 }
