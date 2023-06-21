@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PipeTrajectoryCalc : MonoBehaviour
@@ -37,6 +38,21 @@ public class PipeTrajectoryCalc : MonoBehaviour
             objectBeingProj.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             objectBeingProj = null;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Vector3 lastPoint = transform.GetChild(0).position;
+        Gizmos.color = Color.magenta;
+        for (float i = 0.0f; i <= 1.0f; i += 0.05f)
+        {
+            Vector3 lerp1 = Vector3.Lerp(transform.GetChild(0).position, transform.GetChild(1).position, i);
+            Vector3 lerp2 = Vector3.Lerp(transform.GetChild(1).position, transform.GetChild(2).position, i);
+            Vector3 lerp3 = Vector3.Lerp(lerp1, lerp2, i);
+            Gizmos.DrawLine(lastPoint, lerp3);
+            lastPoint = lerp3;
+        }
+        Gizmos.DrawLine(lastPoint, transform.GetChild(2).position);
     }
 
     public void SetObjectToProject(Transform transform)
