@@ -84,7 +84,8 @@ public class PlaceDominoChain : MonoBehaviour
             IsUIEnabled = true;
             Camera.main.GetComponent<DominoMovement>().isInputEnable = false;
 
-            DominoChain = new GameObject("DominoChainUI");
+            DominoChain = new GameObject("DominoChain");
+            DominoChain.transform.tag = "Domino Chain";
 
             Transform playerTransform = Camera.main.GetComponent<DominoMovement>().GetPlayerTransform();
             for (int i = 0; i < numberOfDomino; i++)

@@ -7,11 +7,15 @@ public class DominoMovement : MonoBehaviour
 {
     [Header("Dependencies")]
     [SerializeField]
-    private Rigidbody dominoRigidbody;
+    private Rigidbody playerMovementRigidbody;
     [SerializeField]
     private Transform dominoTransform;
     [SerializeField]
     private Transform dominoBodyTransform;
+
+    // Who we looking at
+    private Transform lookAtTarget;
+    private bool hadRigidbody;
 
     [Header("Config")]
     [SerializeField]
@@ -22,6 +26,7 @@ public class DominoMovement : MonoBehaviour
     private float rotationSpeed = 100;
     [SerializeField]
     private float dominoRotationMultiplier = 1.6f;
+
 
     #region Movement
 
@@ -43,16 +48,17 @@ public class DominoMovement : MonoBehaviour
 
     private void Start()
     {
-        if(dominoRigidbody == null)
+        if(playerMovementRigidbody == null)
         {
             Debug.LogError("No domino set for movement");
         }
         else
         {
-            SetControlledDomino(dominoRigidbody);
+            SetControlledDomino(dominoBodyTransform);
         }
         xRotationStart = 0;
         xRotationTarget = 90;
+        lookAtTarget = dominoBodyTransform;
     }
 
     private void Update()
@@ -60,7 +66,7 @@ public class DominoMovement : MonoBehaviour
         UpdateInput();
         RotateDominoBody();
         RotateToFaceMovementDirection();
-        transform.LookAt(dominoTransform);
+        transform.LookAt(lookAtTarget);
     }
 
     private void FixedUpdate()
@@ -71,12 +77,22 @@ public class DominoMovement : MonoBehaviour
     /// <summary>
     /// Updates the domino being moved
     /// </summary>
-    /// <param name="dominoRigidbody"></param>
-    public void SetControlledDomino(Rigidbody dominoRigidbody)
+    /// <param name="dominoBodyTransform"></param>
+    public void SetControlledDomino(Transform dominoBodyTransform)
     {
-        this.dominoRigidbody = dominoRigidbody;
-        this.dominoTransform = dominoRigidbody.transform;
-        this.dominoTransform.gameObject.tag = "Player";
+        this.dominoBodyTransform = dominoBodyTransform;
+        lookAtTarget = dominoBodyTransform;
+        this.dominoBodyTransform.gameObject.tag = "Player";
+
+        if (dominoBodyTransform.TryGetComponent(out Rigidbody rigidbody))
+        {
+            hadRigidbody = true;
+            Destroy(rigidbody);
+        }
+        else
+        {
+            hadRigidbody = false;
+        }
     }
 
     /// <summary>
@@ -128,7 +144,7 @@ public class DominoMovement : MonoBehaviour
                 velocity = -dominoTransform.forward.normalized * Time.fixedDeltaTime * speed;
             }
 
-            dominoRigidbody.velocity = new(velocity.x, dominoRigidbody.velocity.y, velocity.z);
+            playerMovementRigidbody.velocity = new(velocity.x, playerMovementRigidbody.velocity.y, velocity.z);
         }
     }
 
@@ -200,7 +216,7 @@ public class DominoMovement : MonoBehaviour
 
     public Rigidbody GetPlayerRigidbody()
     {
-        return dominoRigidbody;
+        return playerMovementRigidbody;
     }
 
     public Transform GetPlayerTransform()
