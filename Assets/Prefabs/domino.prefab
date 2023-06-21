@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8619048872727277345}
   - component: {fileID: 4625998215235035268}
   - component: {fileID: 7482220143972193358}
-  - component: {fileID: 4896931417441495104}
+  - component: {fileID: 2141205828536414869}
   - component: {fileID: 5773713892094329419}
   m_Layer: 0
   m_Name: domino
@@ -63,9 +63,9 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 34b29b222385a6d4fa86258a747b3bf7, type: 2}
-  - {fileID: 2100000, guid: b5682ec21a07f504cb242c101574ccc5, type: 2}
-  - {fileID: -6478536213147159724, guid: 3b7b42cbef5a0054393557b01dc0e297, type: 3}
+  - {fileID: 2100000, guid: cb0c2d10548597a498b469e52f78f5a5, type: 2}
+  - {fileID: 2100000, guid: 015059cb0ca5eda41a7c2cbd322864bd, type: 2}
+  - {fileID: 2100000, guid: dd2450f8ca45fd947871f0945acdfa5c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -87,7 +87,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!54 &4896931417441495104
+--- !u!54 &2141205828536414869
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
