@@ -12,7 +12,7 @@ public class CarBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        carDestroyPoint = GameObject.FindWithTag("DestroyPoint").GetComponent<Transform>();
+        carDestroyPoint = GameObject.FindWithTag("CarDestroyPoint").GetComponent<Transform>();
         carSpawnPointLocation = GameObject.FindWithTag("CarSpawnPoint").GetComponent<Transform>();
     }
 
