@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -8,9 +9,18 @@ public class PlaceDominoChain : MonoBehaviour
     private bool IsUIEnabled = false;
     private int numberOfDomino = 1;
     private GameObject DominoChain;
+    [SerializeField]private TMP_Text dominoSupplyText;
     [SerializeField] private int dominoSupply;
     [SerializeField] public float spaceBetweenDomino;
     [SerializeField] private GameObject dominoToPlace;
+
+    private void Start()
+    {
+        if (dominoSupply > 0)
+        {
+            dominoSupplyText.text = ("Domino Supply : " + dominoSupply);
+        }
+    }
 
     private void Update()
     {
@@ -87,7 +97,6 @@ public class PlaceDominoChain : MonoBehaviour
             DominoChain = new GameObject("DominoChain");
             DominoChain.transform.tag = "Domino Chain";
 
-            Transform playerTransform = Camera.main.GetComponent<DominoMovement>().GetPlayerTransform();
             for (int i = 0; i < numberOfDomino; i++)
             {
                 InstatiateUIDomino();
@@ -117,11 +126,13 @@ public class PlaceDominoChain : MonoBehaviour
     public void AddDominoToSupply(int domino)
     {
         dominoSupply += domino;
+        dominoSupplyText.text = "Domino Supply : " + dominoSupply;
     }
 
     public void SubtractDominoFromSupply(int domino)
     {
         dominoSupply -= domino;
         if (dominoSupply < 0) dominoSupply = 0;
+        dominoSupplyText.text = "Domino Supply : " + dominoSupply;
     }
 }

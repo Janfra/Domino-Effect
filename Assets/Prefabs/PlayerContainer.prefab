@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7c9faf916892ec4a99ecd571ab4d016, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dominoSupply: 5
+  dominoSupply: 0
   spaceBetweenDomino: 1.5
   dominoToPlace: {fileID: 8995610282496865691, guid: 0303ec24313fef041b63480467cad4e6, type: 3}
 --- !u!114 &6714111837830128965
@@ -162,7 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c035e0b60fc74234baccb07404346b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dominoRigidbody: {fileID: 6714111837435167691}
+  playerMovementRigidbody: {fileID: 0}
   dominoTransform: {fileID: 6714111837435167690}
   dominoBodyTransform: {fileID: 0}
   isInputEnable: 1
