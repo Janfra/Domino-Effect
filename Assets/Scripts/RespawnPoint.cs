@@ -23,7 +23,7 @@ public class RespawnPoint : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             Debug.Log("New respawn point");
-            objectToRespawn = other.transform;
+            objectToRespawn = other.transform.parent;
             currentRespawnPoint = this;
         }
     }
