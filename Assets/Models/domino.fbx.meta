@@ -8,22 +8,17 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.009
-    second: {fileID: 2100000, guid: 01335be59f0e39d4c9e2ceb9d06b25ee, type: 2}
+    second: {fileID: 2100000, guid: 015059cb0ca5eda41a7c2cbd322864bd, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.010
-    second: {fileID: 2100000, guid: 91ea67920cd7da94b9d048f231089877, type: 2}
+    second: {fileID: 2100000, guid: cb0c2d10548597a498b469e52f78f5a5, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.011
-    second: {fileID: 2100000, guid: 956eed8eae3d66744ac0618de35fba10, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: gamejam logo
-    second: {fileID: 2800000, guid: ba7cbb7831c80a84c96883c5c7f4b258, type: 3}
+    second: {fileID: 2100000, guid: dd2450f8ca45fd947871f0945acdfa5c, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -108,7 +103,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 10
+    globalScale: 0.099999994
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
