@@ -236,7 +236,6 @@ GameObject:
   - component: {fileID: 1945866892}
   - component: {fileID: 1945866891}
   - component: {fileID: 1945866890}
-  - component: {fileID: 1945866888}
   - component: {fileID: 1945866893}
   m_Layer: 0
   m_Name: Main Camera (1)
@@ -245,22 +244,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1945866888
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1945866887}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a455222f4a9e04344910857491f473c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dominoRigidbody: {fileID: 1252980152073159240}
-  isInputEnable: 1
-  speed: 100
-  rotationSpeed: 100
 --- !u!81 &1945866890
 AudioListener:
   m_ObjectHideFlags: 0
@@ -594,11 +577,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0303ec24313fef041b63480467cad4e6, type: 3}
---- !u!54 &1252980152073159240 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 4896931417441495104, guid: 0303ec24313fef041b63480467cad4e6, type: 3}
-  m_PrefabInstance: {fileID: 1252980152073159239}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1252980152073159245
 MonoBehaviour:
   m_ObjectHideFlags: 0
