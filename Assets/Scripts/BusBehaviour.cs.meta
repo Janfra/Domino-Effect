@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scripts/OnTouchKill.cs.meta
+guid: ca19477f8f935a44a94247cb47f0b0d9
+========
+guid: a7af0c33f2c897044aec7eabe0cc40f7
+>>>>>>>> Feature/DetailedLevel:Assets/Scripts/BusBehaviour.cs.meta
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
