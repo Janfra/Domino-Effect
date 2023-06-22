@@ -407,6 +407,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 638ca11e5314ac14ab5bdd2354c7eff5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1125497916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1125497914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c497c8b3fba37f64985f4523ff548164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonCaller: {fileID: 1125497915}
+  movingConfiguration:
+  - platform: {fileID: 1714928248}
+    targetPosition: {x: 3.02, y: 0, z: 0}
+    isPingPong: 0
+    durationToTarget: 1
+    durationToReset: 1
+    startPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1218610382
 GameObject:
   m_ObjectHideFlags: 0
@@ -802,6 +822,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1714928248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1714928242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22a6b02126b576c4898d5a618d74745b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1800152216
 GameObject:
   m_ObjectHideFlags: 0

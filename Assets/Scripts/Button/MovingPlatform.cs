@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
-public class MovingPlatform : MonoBehaviour
+public class MovingPlatform : BaseMovablePlatform
 {
     public event Action<Vector3> OnPlatformCollision;
     public event Action OnPlatformCollisionEnded;
@@ -12,7 +12,6 @@ public class MovingPlatform : MonoBehaviour
     private Rigidbody thisRigidbody;
     public Rigidbody Rigidbody => thisRigidbody;
     private List<Transform> blockingPlatforms = new();
-    [SerializeField]
     private MoveOrganizer organizer;
 
     [System.Serializable]
@@ -346,12 +345,15 @@ public class MovingPlatform : MonoBehaviour
         thisRigidbody = GetComponent<Rigidbody>();
     }
 
+
+
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.TryGetComponent(out MovingPlatform isPlatform))
         {
             blockingPlatforms.Add(isPlatform.transform);
             OnPlatformCollision?.Invoke(isPlatform.transform.position);
+            CallOnCollision(isPlatform.transform.position);
         }
     }
 
@@ -376,6 +378,7 @@ public class MovingPlatform : MonoBehaviour
             if(blockingPlatforms.Count == 0)
             {
                 OnPlatformCollisionEnded?.Invoke();
+                CallOnEndCollision();
             }
         }
     }
@@ -399,5 +402,15 @@ public class MovingPlatform : MonoBehaviour
             if (configuration == null || configuration.target == null) return;
             Gizmos.DrawLine(transform.position, configuration.target + transform.position);
         }
+    }
+
+    public override Rigidbody GetRigidbody()
+    {
+        return Rigidbody;
+    }
+
+    public override Transform GetTransform()
+    {
+        return transform;
     }
 }
