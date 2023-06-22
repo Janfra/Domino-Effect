@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class MovingPlatform : BaseMovablePlatform
@@ -19,25 +18,15 @@ public class MovingPlatform : BaseMovablePlatform
     protected class MoveOrganizer
     {
         [SerializeField]
-        private List<MovingConfiguration> configurations = new();
-        private List<MovingConfiguration> activeMoves = new();
-        private List<MovingConfiguration> readyForResetMoves = new();
+        private List<MovingConfiguration> configurations;
+        private List<MovingConfiguration> activeMoves;
+        private List<MovingConfiguration> readyForResetMoves;
         private bool isActive = false;
         private float moveTime = 0.0f;
-        private float resetTime = 0.0f;
         private Vector3 startPosition;
         private MovingConfiguration currentHighestPriority;
 
         public List<MovingConfiguration> ConfigurationsData => configurations;
-
-        public void Init(MovingPlatform owner)
-        {
-            startPosition = owner.transform.position;
-            foreach (MovingConfiguration configuration in configurations)
-            {
-                configuration.Init(owner);
-            }
-        }
 
         public void AddToMoving(MovingConfiguration configuration, MovingPlatform caller)
         {
@@ -45,7 +34,6 @@ public class MovingPlatform : BaseMovablePlatform
             {
                 return;
             }
-
             activeMoves.Add(configuration);
             configuration.OnStartMove(moveTime);
             if (!isActive)
@@ -56,13 +44,13 @@ public class MovingPlatform : BaseMovablePlatform
 
         private void RemoveFromMoving(MovingConfiguration configuration)
         {
-            readyForResetMoves.Remove(configuration);
             activeMoves.Remove(configuration);
+            readyForResetMoves.Remove(configuration);
         }
 
         public void AddToReadyToReset(MovingConfiguration configuration)
         {
-            if (!readyForResetMoves.Contains(configuration) && activeMoves.Contains(configuration))
+            if (!readyForResetMoves.Contains(configuration))
             {
                 readyForResetMoves.Add(configuration);
             }
@@ -83,17 +71,11 @@ public class MovingPlatform : BaseMovablePlatform
                 // Check for objects that can be resetted by priority
                 if(readyForResetMoves.Count > 0)
                 {
-                    resetTime += Time.deltaTime;
                     CheckForReset(orderOfUpdate, startPosition + startPositionOffset);
-                }
-                else
-                {
-                    resetTime = 0.0f;
                 }
                 yield return null;
             }
 
-            moveTime = 0.0f;
             isActive = false;
             yield return null;
         }
@@ -107,12 +89,10 @@ public class MovingPlatform : BaseMovablePlatform
                 MovingConfiguration config = activeMoves[sortedData.index];
                 if (config.IsComplete)
                 {
-                    startPositionOffset += config.GetPositionToAdd(moveTime);
+                    startPositionOffset += config.GetPositionToAdd(startPosition + startPositionOffset, moveTime);
+                    continue;
                 }
-                else
-                {
-                    startPositionOffset += config.MovePlatform(startPosition + startPositionOffset, moveTime);
-                }
+                startPositionOffset += config.MovePlatform(startPosition + startPositionOffset, moveTime);
             }
 
             return startPositionOffset;
@@ -122,15 +102,14 @@ public class MovingPlatform : BaseMovablePlatform
         {
             SetHighestPriority(activeMoves[priorityOrderData[0].index]);
             // If the lowest priority can be reset, start resetting, otherwise it cannot be reset yet.
-            for (int i = priorityOrderData.Count - 1; i >= 0; i--)
+            for (int i = priorityOrderData.Count - 1; i > 0; i--)
             {
                 MoveSortData sortData = priorityOrderData[i];
                 MovingConfiguration currentLowestPriorityConfiguration = activeMoves[sortData.index];
                 if (readyForResetMoves.Contains(currentLowestPriorityConfiguration))
                 {
-                    Debug.Log($"Resetting {sortData.priority}");
                     currentLowestPriorityConfiguration.StartReset(positionToMoveTo, moveTime);
-                    positionToMoveTo -= currentLowestPriorityConfiguration.PositionRemoved;
+                    positionToMoveTo -= currentLowestPriorityConfiguration.ResetOffset;
                     if (!currentLowestPriorityConfiguration.IsResetting)
                     {
                         RemoveFromMoving(currentLowestPriorityConfiguration);
@@ -190,9 +169,9 @@ public class MovingPlatform : BaseMovablePlatform
         private bool isPingPong;
 
         private Action<Vector3, float> resetTypeFunction;
+        private Vector3 resetOffset;
+        public Vector3 ResetOffset => resetOffset;
         private Vector3 positionAdded;
-        private Vector3 positionRemoved;
-        public Vector3 PositionRemoved => positionRemoved;
 
         private bool isResetting;
         public bool IsResetting => isResetting;
@@ -221,10 +200,9 @@ public class MovingPlatform : BaseMovablePlatform
 
         public Vector3 MovePlatform(Vector3 startingPoint, float time)
         {
-            Vector3 movement = GetPositionToAdd(time);
+            Vector3 movement = GetPositionToAdd(startingPoint, time);
             if (!isBlocked)
             {
-                Debug.Log($"Movement being added: {movement}");
                 owner.Rigidbody.MovePosition(movement + startingPoint);
             }
             else
@@ -235,33 +213,25 @@ public class MovingPlatform : BaseMovablePlatform
             return movement;
         }
 
-        public Vector3 GetPositionToAdd(float time)
+        public Vector3 GetPositionToAdd(Vector3 startPoint, float time)
         {
             time -= timeOffset;
-            float progress;
             Vector3 position = new();
+            float progress;
 
             if (isPingPong)
             {
-                Debug.Log("Ping pong");
                 GetLerpProgress(out progress, time, false);
-                position = Vector3.Lerp(Vector3.zero, target, Mathf.PingPong(progress, 1));
+                position = Vector3.Lerp(startPoint, (target - resetOffset) + startPoint, Mathf.PingPong(progress, 1));
             }
             else
             {
                 isComplete = GetLerpProgress(out progress, time);
-                position = Vector3.Lerp(Vector3.zero, target, progress);
+                position = Vector3.Lerp(startPoint, (target - resetOffset) + startPoint, progress);
             }
 
             positionAdded = position;
-            if (IsResetting)
-            {
-                return positionAdded - positionRemoved;
-            }
-            else
-            {
-                return positionAdded;
-            }
+            return position;
         }
 
         public void SetResetToHighesPriority(bool isHighestPriority)
@@ -280,7 +250,7 @@ public class MovingPlatform : BaseMovablePlatform
         {
             resetTypeFunction.Invoke(relativeStartPoint, time);
         }
-
+        
         private void TryAddToActive()
         {
             OnAddToActive?.Invoke(this);
@@ -288,43 +258,23 @@ public class MovingPlatform : BaseMovablePlatform
 
         private void TryAddToReset()
         {
-            OnAddToReset?.Invoke(this);
+            OnAddToActive?.Invoke(this);
         }
 
         private void ResetBackToRelativeStart(Vector3 relativeStartPoint, float time)
         {
             float progress;
-            if (!isBlocked)
-            {
-                isResetting = GetLerpResetProgress(out progress, time);
-                owner.Rigidbody.MovePosition(Vector3.Lerp(owner.transform.position, relativeStartPoint - positionAdded, progress));
-                if (!isResetting)
-                {
-                    positionRemoved = Vector3.zero;
-                }
-                else
-                {
-                    positionRemoved = Vector3.Lerp(Vector3.zero, target, progress);
-                }
-            }
+            isResetting = GetLerpProgress(out progress, time);
+            owner.Rigidbody.MovePosition(Vector3.Lerp(owner.transform.position, relativeStartPoint - positionAdded, progress));
+            resetOffset = owner.transform.position - relativeStartPoint - positionAdded;
         }
 
         private void ResetBackToStart(Vector3 startPoint, float time)
         {
             float progress;
-            if (!isBlocked)
-            {
-                isResetting = GetLerpResetProgress(out progress, time);
-                owner.Rigidbody.MovePosition(Vector3.Lerp(owner.transform.position, startPoint, progress));
-                if (!isResetting)
-                {
-                    positionRemoved = Vector3.zero;
-                }
-                else
-                {
-                    positionRemoved = Vector3.Lerp(Vector3.zero, target, progress);
-                }
-            }
+            isResetting = GetLerpProgress(out progress, time);
+            owner.Rigidbody.MovePosition(Vector3.Lerp(owner.transform.position, startPoint, progress));
+            resetOffset = owner.transform.position - startPoint;
         }
 
         private bool GetLerpProgress(out float progress, float time, bool isClamped = true)
@@ -340,12 +290,6 @@ public class MovingPlatform : BaseMovablePlatform
                 float tempValue = Mathf.Clamp01(progress % 1);
                 return tempValue == 1;
             }
-        }
-
-        private bool GetLerpResetProgress(out float progress, float time)
-        {
-            progress = Mathf.Clamp01(time / resetDuration);
-            return progress < 1;
         }
         
         private void OnCollision(Vector3 collisionPosition)
@@ -399,7 +343,6 @@ public class MovingPlatform : BaseMovablePlatform
     private void Start()
     {
         thisRigidbody = GetComponent<Rigidbody>();
-        organizer.Init(this);
     }
 
 
