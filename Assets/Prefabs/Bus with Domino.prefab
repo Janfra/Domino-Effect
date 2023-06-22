@@ -93,6 +93,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4780843408530821240}
   - component: {fileID: -3787917614240829846}
+  - component: {fileID: 6966205619196872673}
   m_Layer: 0
   m_Name: Bus with Domino
   m_TagString: Untagged
@@ -135,7 +136,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   busDestroyPoint: {fileID: 0}
   busSpawnPointLocation: {fileID: 0}
-  busSpeed: 5
+  busSpeed: 3
+--- !u!65 &6966205619196872673
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4778729942784252500}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.25, y: 1.65, z: 4.23}
+  m_Center: {x: 0.21, y: 0.32, z: 0}
 --- !u!1 &4778748179956992294
 GameObject:
   m_ObjectHideFlags: 0
