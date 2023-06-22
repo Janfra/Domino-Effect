@@ -9,7 +9,7 @@ public class PipeCollider : MonoBehaviour
         if (collider.gameObject.CompareTag("Player") && Camera.main.GetComponent<DominoMovement>().isInputEnable)
         {
             Camera.main.GetComponent<DominoMovement>().isInputEnable = false;
-            transform.GetChild(0).GetComponent<PipeTrajectoryCalc>().SetObjectToProject(collider.transform.parent);
+            transform.GetChild(0).GetComponent<PipeTrajectoryCalc>().SetObjectToProject(collider.transform);
             collider.attachedRigidbody.velocity = Vector3.zero;
         }
     }

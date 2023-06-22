@@ -17,20 +17,7 @@ public class LoadLevelOnCollision : MonoBehaviour
     {
         if(other.CompareTag("Player"))
         {
-            if(SceneLoader.Instance == null)
-            {
-                Debug.LogError("No scene loader on scene!");
-                return;
-            }
-
-            if(sceneName != null)
-            {
-                SceneLoader.Instance.LoadScene(sceneName);
-            }
-            else
-            {
-                SceneLoader.Instance.LoadNext();
-            }
+            SceneLoader.Instance.LoadScene(sceneName);
         }
     }
 }
