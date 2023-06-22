@@ -498,10 +498,10 @@ MonoBehaviour:
   buttonCaller: {fileID: 1125497915}
   movingConfiguration:
   - platform: {fileID: 1714928248}
-    targetPosition: {x: 3.02, y: 0, z: 0}
+    targetPosition: {x: 5, y: 0, z: 0}
     isPingPong: 0
     durationToTarget: 1
-    durationToReset: 1
+    durationToReset: 5
     startPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1218610382
 GameObject:
