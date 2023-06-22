@@ -135,7 +135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   busDestroyPoint: {fileID: 0}
   busSpawnPointLocation: {fileID: 0}
-  busSpeed: 1
+  busSpeed: 5
 --- !u!1 &4778748179956992294
 GameObject:
   m_ObjectHideFlags: 0
