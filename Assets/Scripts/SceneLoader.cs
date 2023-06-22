@@ -28,6 +28,19 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
+    public void LoadScene(int index)
+    {
+        if(SceneManager.GetSceneByBuildIndex(index) != null)
+        {
+            StartCoroutine(StartLoadingScene(index));
+        }
+    }
+
+    public void LoadNext()
+    {
+        LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
     private IEnumerator StartLoadingScene(string name)
     {
         yield return null;
@@ -38,6 +51,38 @@ public class SceneLoader : MonoBehaviour
             yield return null;
         }
         yield return null;
+    }
+
+    private IEnumerator StartLoadingScene(int index)
+    {
+        yield return null;
+        AsyncOperation sceneLoading = SceneManager.LoadSceneAsync(index);
+        while (!sceneLoading.isDone)
+        {
+            Debug.Log($"Scene loading in progress, current progress: {sceneLoading.progress}");
+            yield return null;
+        }
+
+        Debug.Log("Loaded scene!");
+        yield return null;
+    }
+
+    public static void OnStartButton()
+    {
+        Instance.LoadNext();
+    }
+
+    public static void OnQuitButton()
+    {
+        Application.Quit();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnQuitButton();
+        }
     }
 }
 
