@@ -15,5 +15,9 @@ public class CameraController : MonoBehaviour
         {
             transform.position = hit.point;
         }
+        else
+        {
+            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -cameraMaxDistance);
+        }
     }
 }

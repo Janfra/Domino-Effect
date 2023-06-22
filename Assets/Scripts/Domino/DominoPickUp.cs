@@ -12,24 +12,24 @@ public class DominoPickUp : MonoBehaviour
         if (!isPickedup)
         {
             isPickedup = true;
-            foreach (Material material in transform.GetChild(0).GetComponent<Renderer>().materials)
+            foreach (Material material in transform.GetComponent<Renderer>().materials)
             {
                 Color color = material.color;
                 color.a = 0.5f;
                 material.color = color;
             }
-            GetComponent<SphereCollider>().enabled = false;
+            GetComponent<Collider>().enabled = false;
         }
         else
         {
             isPickedup = false;
-            foreach (Material material in transform.GetChild(0).GetComponent<Renderer>().materials)
+            foreach (Material material in transform.GetComponent<Renderer>().materials)
             {
                 Color color = material.color;
                 color.a = 1.0f;
                 material.color = color;
             }
-            GetComponent<SphereCollider>().enabled = true;
+            GetComponent<Collider>().enabled = true;
         }
         
     }
