@@ -1,26 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq.Expressions;
-using UnityEditor.Networking.PlayerConnection;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Debug = UnityEngine.Debug;
 
 public class MoveObjectOnPressed : OnPressedEvent
 {
     [SerializeField]
-    private List<MoveConfiguration> movingConfiguration;
+    private List<SimpleMoveConfig> movingConfiguration;
     private bool isActive;
     private bool isResetting;
 
     [System.Serializable]
-    private class MoveConfiguration
+    private class SimpleMoveConfig
     {
         private const float BLOCK_DISTANCE = 0.05f;
 
         [Header("Dependencies")]
-        public MovingPlatform platform;
+        public BaseMovablePlatform platform;
 
         [Header("Configuration")]
         public Vector3 targetPosition;
@@ -32,6 +29,7 @@ public class MoveObjectOnPressed : OnPressedEvent
 
         [HideInInspector]
         public Vector3 startPosition;
+        private Vector3 resetPosition;
         private float timeBlocked = 0.0f;
         private bool isBlocked;
         private bool isComplete;
@@ -41,9 +39,9 @@ public class MoveObjectOnPressed : OnPressedEvent
         {
             if (platform == null) return;
 
-            startPosition = platform.transform.position;
-            platform.OnPlatformCollision += OnCollision;
-            platform.OnPlatformCollisionEnded += CancelBlock;
+            startPosition = platform.GetTransform().position;
+            platform.OnCollision += OnCollision;
+            platform.OnEndCollision += CancelBlock;
             Debug.Log($"{startPosition}");
         }
 
@@ -65,7 +63,7 @@ public class MoveObjectOnPressed : OnPressedEvent
 
             if (!isBlocked)
             {
-                platform.Rigidbody.MovePosition(newPosition);
+                platform.GetRigidbody().MovePosition(newPosition);
             }
             else
             {
@@ -74,11 +72,16 @@ public class MoveObjectOnPressed : OnPressedEvent
             }
         }
 
+        public void SetResetPosition()
+        {
+            resetPosition = platform.GetTransform().position;
+        }
+
         public void ResetBackToStart(float time)
         {
             float progress;
-            isComplete = GetLerpProgress(out progress, time);
-            platform.Rigidbody.MovePosition(Vector3.Lerp(platform.transform.position, startPosition, progress));
+            isComplete = GetResetLerpProgress(out progress, time);
+            platform.GetRigidbody().MovePosition(Vector3.Lerp(resetPosition, startPosition, progress));
         }
 
         public void RestartCompletedState()
@@ -89,9 +92,9 @@ public class MoveObjectOnPressed : OnPressedEvent
 
         private bool CheckForBlock(Vector3 position)
         {
-            Vector3 currentPosition = platform.transform.position;
+            Vector3 currentPosition = platform.GetTransform().position;
             // Closest point, multiplying by 1000 to get closest point outside, otherwise it returns position inside collider. Will not work with objects bigger than that
-            Vector3 closestPoint = platform.Rigidbody.ClosestPointOnBounds(position);
+            Vector3 closestPoint = platform.GetRigidbody().ClosestPointOnBounds(position);
             Vector3 directionToCollision = (closestPoint - currentPosition);
             float distanceFromClosestBound = BLOCK_DISTANCE + directionToCollision.magnitude;
             return Physics.Raycast(currentPosition, directionToCollision, distanceFromClosestBound);
@@ -106,7 +109,7 @@ public class MoveObjectOnPressed : OnPressedEvent
         {
             Debug.Log("Collided with platform");
 
-            if(CheckForBlock(collisionPosition))
+            if (CheckForBlock(collisionPosition))
             {
                 isBlocked = true;
                 timeBlocked += Time.deltaTime;
@@ -119,6 +122,12 @@ public class MoveObjectOnPressed : OnPressedEvent
         }
 
         private bool GetLerpProgress(out float progress, float time)
+        {
+            progress = Mathf.Clamp01(time / durationToTarget);
+            return progress == 1;
+        }
+
+        private bool GetResetLerpProgress(out float progress, float time)
         {
             progress = Mathf.Clamp01(time / durationToReset);
             return progress == 1;
@@ -135,7 +144,7 @@ public class MoveObjectOnPressed : OnPressedEvent
 
     private void SetStartPosition()
     {
-        foreach (MoveConfiguration configuration in movingConfiguration)
+        foreach (SimpleMoveConfig configuration in movingConfiguration)
         {
             configuration.SetStartPosition();
         }
@@ -162,7 +171,7 @@ public class MoveObjectOnPressed : OnPressedEvent
         while (isActive)
         {
             time += Time.deltaTime;
-            foreach (MoveConfiguration configuration in movingConfiguration)
+            foreach (SimpleMoveConfig configuration in movingConfiguration)
             {
                 if (configuration.IsComplete) continue;
                 configuration.SetNewPosition(time);
@@ -178,13 +187,18 @@ public class MoveObjectOnPressed : OnPressedEvent
     {
         isResetting = true;
         float time = 0.0f;
-        List<MoveConfiguration> objectThatHaveBeenReset = new();
+        List<SimpleMoveConfig> objectThatHaveBeenReset = new();
         yield return null;
 
-        while(movingConfiguration.Count > 0 && isResetting)
+        foreach(SimpleMoveConfig config in movingConfiguration)
+        {
+            config.SetResetPosition();
+        }
+
+        while (movingConfiguration.Count > 0 && isResetting)
         {
             time += Time.deltaTime;
-            foreach (MoveConfiguration configuration in movingConfiguration)
+            foreach (SimpleMoveConfig configuration in movingConfiguration)
             {
                 if (configuration.IsComplete)
                 {
@@ -195,7 +209,7 @@ public class MoveObjectOnPressed : OnPressedEvent
             }
 
             yield return null;
-            foreach (MoveConfiguration configuration in objectThatHaveBeenReset)
+            foreach (SimpleMoveConfig configuration in objectThatHaveBeenReset)
             {
                 movingConfiguration.Remove(configuration);
             }
@@ -203,13 +217,13 @@ public class MoveObjectOnPressed : OnPressedEvent
         }
 
         // If cancel add them back, if not just repopulate it
-        if(isResetting != false)
+        if (isResetting != false)
         {
             movingConfiguration = new(objectThatHaveBeenReset);
         }
         else
         {
-            foreach (MoveConfiguration configuration in objectThatHaveBeenReset)
+            foreach (SimpleMoveConfig configuration in objectThatHaveBeenReset)
             {
                 movingConfiguration.Add(configuration);
             }
@@ -222,7 +236,7 @@ public class MoveObjectOnPressed : OnPressedEvent
 
     private void RestartCompletedState()
     {
-        foreach (MoveConfiguration configuration in movingConfiguration)
+        foreach (SimpleMoveConfig configuration in movingConfiguration)
         {
             configuration.RestartCompletedState();
         }
@@ -232,7 +246,7 @@ public class MoveObjectOnPressed : OnPressedEvent
     {
         if (movingConfiguration == null || movingConfiguration.Count == 0) return;
 
-        foreach (MoveConfiguration configuration in movingConfiguration)
+        foreach (SimpleMoveConfig configuration in movingConfiguration)
         {
             if (configuration.platform == null) return;
 
@@ -242,8 +256,17 @@ public class MoveObjectOnPressed : OnPressedEvent
             }
             else
             {
-                Gizmos.DrawLine(configuration.platform.transform.position, configuration.targetPosition + configuration.platform.transform.position);
+                Gizmos.DrawLine(configuration.platform.GetTransform().position, configuration.targetPosition + configuration.platform.GetTransform().position);
             }
         }
     }
+}
+
+public interface IMovablePlatform
+{
+    public event Action<Vector3> OnCollision;
+    public event Action OnEndCollision;
+
+    Rigidbody GetRigidbody();
+    Transform GetTransform();
 }
