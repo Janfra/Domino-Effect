@@ -26,6 +26,26 @@ public class PressingButton : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        numberOfObjectsColliding++;
+
+        if(numberOfObjectsColliding == 1)
+        {
+            OnPressed?.Invoke();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        numberOfObjectsColliding--;
+
+        if(numberOfObjectsColliding <= 0)
+        {
+            OnReleased?.Invoke();
+        }
+    }
+
     private void OnCollisionExit(Collision collision)
     {
         numberOfObjectsColliding--;

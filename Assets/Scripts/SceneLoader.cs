@@ -22,6 +22,12 @@ public class SceneLoader : MonoBehaviour
 
     public void LoadScene(string name)
     {
+        if(name == null || name.Length == 0)
+        {
+            Debug.LogWarning("No name provided when loading scene, loading next instead");
+            LoadNext();
+        }
+
         if(SceneManager.GetSceneByName(name) != null)
         {
             StartCoroutine(StartLoadingScene(name));
@@ -38,7 +44,7 @@ public class SceneLoader : MonoBehaviour
 
     public void LoadNext()
     {
-        LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        LoadScene((SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings);
     }
 
     private IEnumerator StartLoadingScene(string name)
@@ -57,7 +63,7 @@ public class SceneLoader : MonoBehaviour
     {
         yield return null;
         AsyncOperation sceneLoading = SceneManager.LoadSceneAsync(index);
-        while (!sceneLoading.isDone)
+        while (sceneLoading != null && !sceneLoading.isDone)
         {
             Debug.Log($"Scene loading in progress, current progress: {sceneLoading.progress}");
             yield return null;
@@ -75,14 +81,6 @@ public class SceneLoader : MonoBehaviour
     public static void OnQuitButton()
     {
         Application.Quit();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            OnQuitButton();
-        }
     }
 }
 

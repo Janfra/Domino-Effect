@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< Updated upstream:Assets/Models/Buildings.meta
 guid: a7097050e5f291544b2c84844fbc97a4
+========
+guid: 21dd7881fd0194b4aa025e147ba3a764
+>>>>>>>> Stashed changes:Assets/Scripts/UI.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
