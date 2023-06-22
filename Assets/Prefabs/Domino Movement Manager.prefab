@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1354745696990161489}
   - component: {fileID: 6986274135806713186}
   - component: {fileID: 4689945077760316274}
+  - component: {fileID: 7515484715935094426}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -121,6 +122,19 @@ MonoBehaviour:
   dominoSupply: 0
   spaceBetweenDomino: 1
   dominoToPlace: {fileID: 8995610282496865691, guid: 0303ec24313fef041b63480467cad4e6, type: 3}
+--- !u!114 &7515484715935094426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1354745696990161488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c5b36c1dad9acb43b4e5a7be7ca569f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraMaxDistance: 8
 --- !u!1 &6003795712747148488
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,7 +145,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1190487111128452103}
   - component: {fileID: 383247458146692414}
-  - component: {fileID: 485208755629008296}
   m_Layer: 0
   m_Name: Domino Movement Manager
   m_TagString: Untagged
@@ -172,18 +185,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 1
---- !u!114 &485208755629008296
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6003795712747148488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28472108703fbe74aa841c362f127ffe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1920000910360299545
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -191,10 +192,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1190487111128452103}
     m_Modifications:
-    - target: {fileID: 7482220143972193358, guid: 0303ec24313fef041b63480467cad4e6, type: 3}
-      propertyPath: m_Materials.Array.data[2]
-      value: 
-      objectReference: {fileID: 2100000, guid: dd2450f8ca45fd947871f0945acdfa5c, type: 2}
     - target: {fileID: 8619048872727277345, guid: 0303ec24313fef041b63480467cad4e6, type: 3}
       propertyPath: m_RootOrder
       value: 1
