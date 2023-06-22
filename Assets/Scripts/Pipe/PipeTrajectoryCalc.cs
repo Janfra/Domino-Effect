@@ -35,7 +35,6 @@ public class PipeTrajectoryCalc : MonoBehaviour
         {
             lerpCurrentTime = 0.0f;
             Camera.main.GetComponent<DominoMovement>().isInputEnable = true;
-            objectBeingProj.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             objectBeingProj = null;
         }
     }

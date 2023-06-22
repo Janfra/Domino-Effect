@@ -13,6 +13,10 @@ public class PipeCollider : MonoBehaviour
             collider.attachedRigidbody.velocity = Vector3.zero;
         }
     }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
     private void OnTriggerStay(Collider collider)
     {
         if (collider.gameObject.CompareTag("Player") && Camera.main.GetComponent<DominoMovement>().isInputEnable)

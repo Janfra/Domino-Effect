@@ -32,6 +32,10 @@ Material:
     m_Floats:
     - _Shininess: 0.078125
     m_Colors:
+<<<<<<< Updated upstream
     - _Color: {r: 1, g: 0.9378638, b: 0.740566, a: 1}
+=======
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+>>>>>>> Stashed changes
     - _SpecColor: {r: 0.2509804, g: 0.2509804, b: 0.2509804, a: 1}
   m_BuildTextureStacks: []

@@ -17,6 +17,10 @@ public class DominoCollisionChecker : MonoBehaviour
                 player.parent = parent;
                 Camera.main.transform.parent.position = child.position;
                 child.parent = transform;
+<<<<<<< Updated upstream
+=======
+                child.AddComponent<DominoCollisionChecker>();
+>>>>>>> Stashed changes
                 Camera.main.GetComponent<DominoMovement>().SetControlledDomino(child);
                 Camera.main.GetComponent<PlaceDominoChain>().AddDominoToSupply(parent.childCount);
                 Destroy(parent.gameObject);

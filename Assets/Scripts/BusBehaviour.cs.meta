@@ -1,6 +1,10 @@
 fileFormatVersion: 2
 <<<<<<<< HEAD:Assets/Scripts/OnTouchKill.cs.meta
+<<<<<<< Updated upstream
 guid: 27b6d96461ddc2c4eaa4bd1ac2dc7111
+=======
+guid: 0d81bc0bd02e7754eb5db82ef9e3429b
+>>>>>>> Stashed changes
 ========
 guid: a7af0c33f2c897044aec7eabe0cc40f7
 >>>>>>>> Feature/DetailedLevel:Assets/Scripts/BusBehaviour.cs.meta
