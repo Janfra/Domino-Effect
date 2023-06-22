@@ -23,14 +23,7 @@ public class LoadLevelOnCollision : MonoBehaviour
                 return;
             }
 
-            if(sceneName != null)
-            {
-                SceneLoader.Instance.LoadScene(sceneName);
-            }
-            else
-            {
-                SceneLoader.Instance.LoadNext();
-            }
+            SceneLoader.Instance.LoadScene(sceneName);
         }
     }
 }

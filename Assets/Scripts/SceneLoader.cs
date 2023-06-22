@@ -22,30 +22,47 @@ public class SceneLoader : MonoBehaviour
 
     public void LoadScene(string name)
     {
-        if(SceneManager.GetSceneByName(name) != null)
+        if(name.Length == 0)
+        {
+            LoadNext();
+            Debug.LogWarning("No scene name given, so loading next scene instead");
+            return;
+        }
+
+        Scene sceneToLoad = SceneManager.GetSceneByName(name);
+        if (sceneToLoad != null)
         {
             StartCoroutine(StartLoadingScene(name));
+        }
+        else
+        {
+            Debug.LogError("Scene not found");
         }
     }
 
     public void LoadScene(int index)
     {
-        if(SceneManager.GetSceneByBuildIndex(index) != null)
+        Scene sceneToLoad = SceneManager.GetSceneByBuildIndex(index);
+        if (sceneToLoad != null)
         {
             StartCoroutine(StartLoadingScene(index));
+        }
+        else
+        {
+            Debug.LogError("Scene not found");
         }
     }
 
     public void LoadNext()
     {
-        LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        LoadScene((SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings);
     }
 
     private IEnumerator StartLoadingScene(string name)
     {
         yield return null;
         AsyncOperation sceneLoading = SceneManager.LoadSceneAsync(name);
-        while (!sceneLoading.isDone)
+        while (sceneLoading != null && !sceneLoading.isDone)
         {
             Debug.Log($"Scene loading in progress, current progress: {sceneLoading.progress}");
             yield return null;
