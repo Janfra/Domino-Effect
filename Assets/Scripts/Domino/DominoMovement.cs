@@ -59,6 +59,7 @@ public class DominoMovement : MonoBehaviour
         xRotationStart = 0;
         xRotationTarget = 90;
         lookAtTarget = dominoBodyTransform;
+        PauseHandler.SetPlayersDominoForPausing(this);
     }
 
     private void Update()
