@@ -21,4 +21,4 @@ public abstract class BaseMovablePlatform : MonoBehaviour, IMovablePlatform
     {
         OnEndCollision?.Invoke();
     }
-}     
+}

@@ -21,11 +21,11 @@ public class DominoMovement : MonoBehaviour
     [SerializeField]
     public bool isInputEnable = true;
     [SerializeField]
-    private float speed = 300;
+    private float speed = 100;
     [SerializeField]
     private float rotationSpeed = 100;
     [SerializeField]
-    private float dominoRotationMultiplier = 2.6f;
+    private float dominoRotationMultiplier = 1.6f;
 
 
     #region Movement
@@ -59,6 +59,7 @@ public class DominoMovement : MonoBehaviour
         xRotationStart = 0;
         xRotationTarget = 90;
         lookAtTarget = dominoBodyTransform;
+        PauseHandler.SetPlayersDominoForPausing(this);
     }
 
     private void Update()

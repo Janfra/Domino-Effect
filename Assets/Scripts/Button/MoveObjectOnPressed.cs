@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,6 +29,7 @@ public class MoveObjectOnPressed : OnPressedEvent
 
         [HideInInspector]
         public Vector3 startPosition;
+        private Vector3 resetPosition;
         private float timeBlocked = 0.0f;
         private bool isBlocked;
         private bool isComplete;
@@ -70,11 +72,16 @@ public class MoveObjectOnPressed : OnPressedEvent
             }
         }
 
+        public void SetResetPosition()
+        {
+            resetPosition = platform.GetTransform().position;
+        }
+
         public void ResetBackToStart(float time)
         {
             float progress;
-            isComplete = GetLerpProgress(out progress, time);
-            platform.GetRigidbody().MovePosition(Vector3.Lerp(platform.GetTransform().position, startPosition, progress));
+            isComplete = GetResetLerpProgress(out progress, time);
+            platform.GetRigidbody().MovePosition(Vector3.Lerp(resetPosition, startPosition, progress));
         }
 
         public void RestartCompletedState()
@@ -115,6 +122,12 @@ public class MoveObjectOnPressed : OnPressedEvent
         }
 
         private bool GetLerpProgress(out float progress, float time)
+        {
+            progress = Mathf.Clamp01(time / durationToTarget);
+            return progress == 1;
+        }
+
+        private bool GetResetLerpProgress(out float progress, float time)
         {
             progress = Mathf.Clamp01(time / durationToReset);
             return progress == 1;
@@ -176,6 +189,11 @@ public class MoveObjectOnPressed : OnPressedEvent
         float time = 0.0f;
         List<SimpleMoveConfig> objectThatHaveBeenReset = new();
         yield return null;
+
+        foreach(SimpleMoveConfig config in movingConfiguration)
+        {
+            config.SetResetPosition();
+        }
 
         while (movingConfiguration.Count > 0 && isResetting)
         {
